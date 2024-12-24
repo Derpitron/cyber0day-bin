@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+# Define the mapping for config directories
+declare -A config_paths
+
+# Skeleton directory
+skel_dir="/etc/skel"
+
+# Define configuration paths for each application
+config_paths["calamares"]=( "/etc/calamares" )
+config_paths["emacs"]=( "$HOME/.config/emacs" "$HOME/.emacs" )
+config_paths["fish"]=( "$HOME/.config/fish" )
+# config_paths["hyprland"]=("$HOME/.config/hypr")
+config_paths["kitty"]=( "$HOME/.config/kitty" )
+config_paths["starship"]=( "$HOME/.config/starship" "$HOME/.config/starship.toml" )
+config_paths["waybar"]=( "$HOME/.config/waybar" )
+
+# Function to copy files from skel to the user config directory
+copy_to_skel() {
+    local config_dir=$1
+    # Check if the skeleton directory exists
+    if [ ! -d "$skel_dir" ]; then
+        echo "Error: Skeleton directory '$skel_dir' does not exist."
+        exit 1
+    fi
+
+    # Create the config directory if it doesn't exist
+    if [ ! -d "$config_dir" ]; then
+        mkdir -p "$config_dir"
+        echo "Created config directory: $config_dir"
+    fi
+
+    # Loop through files in the skeleton directory and copy them
+    for skel_file in "$skel_dir"/*; do
+        file_name=$(basename "$skel_file")
+        user_file="$config_dir/$file_name"
+
+        if [ -d "$skel_file" ]; then
+            if [ ! -d "$user_file" ]; then
+                cp -r "$skel_file" "$user_file"
+                echo "Copied directory $file_name to $config_dir"
+            fi
+        elif [ -f "$skel_file" ]; then
+            if [ ! -f "$user_file" ]; then
+                cp "$skel_file" "$user_file"
+                echo "Copied file $file_name to $config_dir"
+            fi
+        fi
+    done
+}
+
+# Main function
+main() {
+    # Check if we received an argument
+    if [ $# -ne 1 ]; then
+        echo "Usage: $0 <application_name>"
+        exit 1
+    fi
+
+    app_name=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+
+    # Check if the config_paths for the given application exist
+    if [ -z "${config_paths[$app_name]}" ]; then
+        echo "Error: No configuration paths defined for '$app_name'"
+        exit 1
+    fi
+
+    # Get the possible config paths for the given app
+    config_dirs="${config_paths[$app_name]}"
+
+    # Iterate through each config directory for the given application
+    for config_dir in ${config_dirs[@]}; do
+        if [ -e "$config_dir" ]; then
+            echo "User config already exists at $config_dir"
+        else
+            # If the config doesn't exist, copy from skel
+            echo "Config doesn't exist at $config_dir. Installing from skel..."
+            # For system directories, use sudo
+            if [[ "$config_dir" =~ ^/etc/ ]]; then
+                echo "This is a system-wide config directory. You will need root privileges."
+                sudo -v # Prompt for sudo password
+                copy_to_skel "$config_dir"
+            else
+                copy_to_skel "$config_dir"
+            fi
+
+            # Ask the user if they want to copy it to the config location
+            read -p "Do you want to copy the config to $config_dir? (y/n): " user_input
+            if [[ "$user_input" =~ ^[Yy]$ ]]; then
+                copy_to_skel "$config_dir"
+                echo "Config copied to $config_dir"
+            else
+                echo "Config installation to $config_dir skipped."
+            fi
+        fi
+    done
+
+    echo "Config installation from skel completed for $app_name."
+}
+
+# Call the main function
+main "$@"
