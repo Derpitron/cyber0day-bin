@@ -1,102 +1,75 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python
+from os.path import exists
+from shutil import copytree
+import sys
+from pathlib import Path
+from argparse import ArgumentParser
 
-# Define the mapping for config directories
-declare -A config_paths
-
-# Skeleton directory
-skel_dir="/etc/skel"
-
-# Define configuration paths for each application
-config_paths["calamares"]=( "/etc/calamares" )
-config_paths["emacs"]=( "$HOME/.config/emacs" "$HOME/.emacs" )
-config_paths["fish"]=( "$HOME/.config/fish" )
-# config_paths["hyprland"]=("$HOME/.config/hypr")
-config_paths["kitty"]=( "$HOME/.config/kitty" )
-config_paths["starship"]=( "$HOME/.config/starship" "$HOME/.config/starship.toml" )
-config_paths["waybar"]=( "$HOME/.config/waybar" )
-
-# Function to copy files from skel to the user config directory
-copy_to_skel() {
-    local config_dir=$1
-    # Check if the skeleton directory exists
-    if [ ! -d "$skel_dir" ]; then
-        echo "Error: Skeleton directory '$skel_dir' does not exist."
-        exit 1
-    fi
-
-    # Create the config directory if it doesn't exist
-    if [ ! -d "$config_dir" ]; then
-        mkdir -p "$config_dir"
-        echo "Created config directory: $config_dir"
-    fi
-
-    # Loop through files in the skeleton directory and copy them
-    for skel_file in "$skel_dir"/*; do
-        file_name=$(basename "$skel_file")
-        user_file="$config_dir/$file_name"
-
-        if [ -d "$skel_file" ]; then
-            if [ ! -d "$user_file" ]; then
-                cp -r "$skel_file" "$user_file"
-                echo "Copied directory $file_name to $config_dir"
-            fi
-        elif [ -f "$skel_file" ]; then
-            if [ ! -f "$user_file" ]; then
-                cp "$skel_file" "$user_file"
-                echo "Copied file $file_name to $config_dir"
-            fi
-        fi
-    done
+config_dict = {
+    'emacs': [
+        ['/etc/skel/.config/emacs'],  # Source directory to copy from
+        ['~/.config/emacs', '~/.emacs.d', '~/.emacs']  # Directories to check
+    ],
+    'kitty': [
+        ['/etc/skel/.config/kitty'],
+        ['~/.config/kitty']
+    ],
+    'waybar': [
+        ['/etc/skel/.config/waybar'],
+        ['~/.config/waybar']
+    ],
+    'fish': [
+        ['/etc/skel/.config/fish'],
+        ['~/.config/fish']
+    ],
 }
 
-# Main function
-main() {
-    # Check if we received an argument
-    if [ $# -ne 1 ]; then
-        echo "Usage: $0 <application_name>"
-        exit 1
-    fi
+def expand_path(path):
+    '''Function to expand the tilde (~) to the full home path'''
+    return str(Path(path).expanduser())
 
-    app_name=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+def config_exists(paths):
+    '''Function to check if configuration exists in any of the given paths and return the path if found'''
+    for path in paths:
+        expanded_path = expand_path(path)
+        if exists(expanded_path):
+            return expanded_path
+    return None
 
-    # Check if the config_paths for the given application exist
-    if [ -z "${config_paths[$app_name]}" ]; then
-        echo "Error: No configuration paths defined for '$app_name'"
-        exit 1
-    fi
+def copy_from_skel(skel_source, destination_paths):
+    '''Function to copy from the skel directory to the destination directory'''
+    for destination in destination_paths:
+        destination = expand_path(destination)
+        if not exists(destination):  # Only copy if destination doesn't exist
+            print(f"Copying from {skel_source} to {destination}")
+            copytree(expand_path(skel_source), destination)
+            break  # Copy to the first valid destination and stop
 
-    # Get the possible config paths for the given app
-    config_dirs="${config_paths[$app_name]}"
+def main():
+    # Setup argparse to handle command-line arguments
+    parser = ArgumentParser(description="Setup configuration from skel to user directory.")
+    parser.add_argument('config_name', type=str, help="Name of the configuration to setup (e.g., 'emacs').")
+    args = parser.parse_args()
 
-    # Iterate through each config directory for the given application
-    for config_dir in ${config_dirs[@]}; do
-        if [ -e "$config_dir" ]; then
-            echo "User config already exists at $config_dir"
-        else
-            # If the config doesn't exist, copy from skel
-            echo "Config doesn't exist at $config_dir. Installing from skel..."
-            # For system directories, use sudo
-            if [[ "$config_dir" =~ ^/etc/ ]]; then
-                echo "This is a system-wide config directory. You will need root privileges."
-                sudo -v # Prompt for sudo password
-                copy_to_skel "$config_dir"
-            else
-                copy_to_skel "$config_dir"
-            fi
+    config_name = args.config_name
 
-            # Ask the user if they want to copy it to the config location
-            read -p "Do you want to copy the config to $config_dir? (y/n): " user_input
-            if [[ "$user_input" =~ ^[Yy]$ ]]; then
-                copy_to_skel "$config_dir"
-                echo "Config copied to $config_dir"
-            else
-                echo "Config installation to $config_dir skipped."
-            fi
-        fi
-    done
+    # Check if the given config_name is valid
+    if config_name not in config_dict:
+        print(f"Invalid configuration name '{config_name}'. Please provide a valid name.")
+        print(f"Valid options are: {', '.join(config_dict.keys())}")
+        sys.exit(1)  # Exit with a non-zero status indicating failure
 
-    echo "Config installation from skel completed for $app_name."
-}
+    # Get the skel source and destination paths for the given config
+    skel_source = config_dict[config_name][0][0]  # The first skel directory
+    destination_paths = config_dict[config_name][1]  # The list of directories to check
 
-# Call the main function
-main "$@"
+    # Check if the configuration already exists in any of the paths
+    existing_path = config_exists(destination_paths)
+    if not existing_path:
+        print(f"Configuration for {config_name} not found. Copying from skel...")
+        copy_from_skel(skel_source, destination_paths)
+    else:
+        print(f"Configuration for {config_name} already exists in: {existing_path}")
+
+if __name__ == "__main__":
+    main()
