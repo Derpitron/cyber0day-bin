@@ -5,7 +5,10 @@ pkgrel=1
 pkgdesc="Core StratOS scripts"
 arch=('any')
 license=('GPL3')
-depends=('bash' 'fish' 'zsh')
+depends=('bash' 'yay-bin' 'python' 'dialog')
+optdepends = (
+	'flatpak: Universal package manager'
+)
 source=()
 md5sums=()
 
