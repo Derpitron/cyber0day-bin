@@ -1,0 +1,15 @@
+# Maintainer: @zstg <zestig@duck.com>
+pkgname=stratos-bin
+pkgver=1.0
+pkgrel=1
+pkgdesc="Core StratOS scripts"
+arch=('any')
+license=('GPL3')
+depends=('bash' 'fish' 'zsh')
+source=()
+md5sums=()
+
+package() {
+    install -d "$pkgdir/usr/local/bin/"
+    cp -a "usr/local/bin/." "$pkgdir/usr/local/bin/"
+}
