@@ -10,7 +10,11 @@ optdepends=('flatpak: Universal package manager')
 source=()
 md5sums=()
 
+prepare() {
+	cp -r $startdir/usr/local/bin/ $srcdir/
+}
+
 package() {
-    install -d "$pkgdir/usr/local/bin/"
-    cp -a "usr/local/bin/." "$pkgdir/usr/local/bin/"
+    install -d $pkgdir/usr/local/bin/
+    cp -a $srcdir/bin/* $pkgdir/usr/local/bin/
 }
