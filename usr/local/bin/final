@@ -8,3 +8,4 @@ userdel stratos
 
 # Clean up
 rm -f /usr/local/bin/enable-display-manager
+pacman -Rns calamares --noconfirm
