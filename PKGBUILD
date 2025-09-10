@@ -1,7 +1,7 @@
 # Maintainer: @zstg <zestig@duck.com>
 pkgname=stratos-bin
 pkgver=1.0
-pkgrel=7
+pkgrel=8
 pkgdesc="Core StratOS scripts"
 arch=('any')
 license=('GPL3')
@@ -14,10 +14,10 @@ source=()
 md5sums=()
 
 prepare() {
-	cp -r $startdir/usr/local/bin/ $srcdir/
+	cp -r "$startdir"/usr/local/bin/ "$srcdir"/
 }
 
 package() {
-    install -d $pkgdir/usr/local/bin/
-    cp -a $srcdir/bin/* $pkgdir/usr/local/bin/
+    install -d "$pkgdir"/usr/local/bin/
+    cp -a "$srcdir"/bin/* "$pkgdir"/usr/local/bin/
 }
