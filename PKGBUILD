@@ -1,13 +1,7 @@
 # Maintainer: @zstg <zestig@duck.com>
 pkgname=stratos-bin
 pkgver=1.0
-<<<<<<< HEAD
-pkgrel=9
-||||||| parent of 0babc53 (Change theme name)
-pkgrel=4
-=======
-pkgrel=5
->>>>>>> 0babc53 (Change theme name)
+pkgrel=10
 pkgdesc="Core StratOS scripts"
 arch=('any')
 license=('GPL3')
