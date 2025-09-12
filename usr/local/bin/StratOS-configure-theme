@@ -13,10 +13,11 @@ while true; do
     case $choice in
         1)
 	    clear
-	    gsettings set org.gnome.shell.extensions.user-theme name "'Tokyonight-Dark'"
-	    gsettings set org.gnome.desktop.interface gtk-theme "'Tokyonight-Dark'"
-	    gsettings set org.gnome.desktop.interface icon-theme "'Tokyonight-Dark'" 
-	    ln -sf /usr/share/themes/Tokyonight-Dark/gtk-4.0/  ~/.config/
+	    export GTKTHEME="tokyonight-gtk-theme-Dark"
+	    gsettings set org.gnome.shell.extensions.user-theme name "$GTKTHEME"
+	    gsettings set org.gnome.desktop.interface gtk-theme "$GTKTHEME"
+	    gsettings set org.gnome.desktop.interface icon-theme "Tokyonight-Moon" 
+	    ln -sf $HOME/.themes/Tokyonight-Dark-B/gtk-4.0/  ~/.config/
 	    sudo cp -f /usr/share/grub/themes/StratOS-grub/tokyo-night/theme.txt /usr/share/grub/themes/StratOS-grub/theme.txt
 	    sudo cp -f /usr/share/grub/themes/StratOS-grub/tokyo-night/background.png /usr/share/grub/themes/StratOS-grub/background.png
 	    sudo ln -sf /etc/calamares/branding/tokyonight-dark/stylesheet.qss  /etc/calamares/branding/default/stylesheet.qss  
