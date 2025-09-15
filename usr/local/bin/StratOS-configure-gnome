@@ -15,7 +15,7 @@ for i in ${extensions[@]}; do
 done
 
 
-gsettings set org.gnome.shell enabled-extensions "['user-theme@gnome-shell-extensions.gcampax.github.com' 'blur-my-shell@aunetx' 'dash-to-dock@micxgx@gmail.com' 'logomenu@aryan_k' 'space-bar@luhrioh' 'app-menu@gnome-shell-extensions.gcampax.github.com' 'places-menu@gnoe-shell-extensions.github.com']"
+gsettings set org.gnome.shell enabled-extensions "['user-theme@gnome-shell-extensions.gcampax.github.com' 'blur-my-shell@aunetx' 'dash-to-dock@micxgx@gmail.com' 'logomenu@aryan_k' 'space-bar@luhrioh' 'app-menu@gnome-shell-extensions.gcampax.github.com' 'places-menu@gnome-shell-extensions.github.com']"
 
 
 #### THEME SETTINGS ######################################################################
