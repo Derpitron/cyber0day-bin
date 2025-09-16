@@ -27,8 +27,9 @@ while true; do
         2)
             echo "Bootstrapping Fedora..."
             until which dnf &>/dev/null; do
+				wget https://dl.fedoraproject.org/pub/fedora/linux/releases/42/Container/x86_64/images/Fedora-WSL-Base-42-1.1.x86_64.tar.xz -O /tmp/fedora-rootfs.tar.xz
                 pkexec brl remove -d fedora 2>/dev/null
-                pkexec brl fetch fedora
+				pkexec brl import fedora /tmp/fedora-rootfs.tar.xz
             done
             echo -e "\n==> Fedora configured successfully."
             ;;
