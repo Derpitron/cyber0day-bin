@@ -2,20 +2,20 @@
 extensions=(
     user-theme@gnome-shell-extensions.gcampax.github.com
     blur-my-shell@aunetx
-    # burn-my-windows@schneegans.github.com
     dash-to-dock@micxgx.gmail.com
     places-menu@gnome-shell-extensions.gcampax.github.com
-    # forge@jmmaranan.com
     logomenu@aryan_k
     space-bar@luchrioh
 )
+    # forge@jmmaranan.com
+    # burn-my-windows@schneegans.github.com
 
 for i in ${extensions[@]}; do
     gnome-extensions enable $i >/dev/null
 done
 
 
-gsettings set org.gnome.shell enabled-extensions "['user-theme@gnome-shell-extensions.gcampax.github.com' 'blur-my-shell@aunetx' 'dash-to-dock@micxgx@gmail.com' 'logomenu@aryan_k' 'space-bar@luhrioh' 'app-menu@gnome-shell-extensions.gcampax.github.com' 'places-menu@gnome-shell-extensions.github.com']"
+gsettings set org.gnome.shell enabled-extensions "['user-theme@gnome-shell-extensions.gcampax.github.com' 'blur-my-shell@aunetx' 'dash-to-dock@micxgx@gmail.com' 'logomenu@aryan_k' 'space-bar@luhrioh' 'app-menu@gnome-shell-extensions.gcampax.github.com' 'places-menu@gnome-shell-extensions.github.com']" 2> /dev/null
 
 
 #### THEME SETTINGS ######################################################################

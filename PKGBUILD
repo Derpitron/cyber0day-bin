@@ -1,7 +1,7 @@
 # Maintainer: @zstg <zestig@duck.com>
 pkgname=stratos-bin
-pkgver=1.0
-pkgrel=13
+pkgver=1.1
+pkgrel=0
 pkgdesc="Core StratOS scripts"
 arch=('any')
 license=('GPL3')
