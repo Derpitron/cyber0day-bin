@@ -1,8 +1,8 @@
-# Maintainer: @zstg <zestig@duck.com>
+# Maintainer: @derpitron <aadhithyanm@protonmail.com>
 pkgname=stratos-bin
 pkgver=1.1
 pkgrel=0
-pkgdesc="Core StratOS scripts"
+pkgdesc="Core StratOS scripts, modified for cyber0day"
 arch=('any')
 license=('GPL3')
 depends=('bash' 'python' 'dialog')

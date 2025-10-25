@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 grab &>/dev/null
-bash /usr/local/bin/StratOS-configure-gnome
+bash /usr/local/bin/cyber0day-configure-gnome
 if [[ -d /bedrock ]]; then
     bash /usr/local/bin/enable-display-manager
     python /opt/maneki-neko/main.py # don't execute in the live env
