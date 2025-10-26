@@ -1,5 +1,5 @@
 # Maintainer: @derpitron <aadhithyanm@protonmail.com>
-pkgname=stratos-bin
+pkgname=cyber0day-bin
 pkgver=1.1
 pkgrel=0
 pkgdesc="Core StratOS scripts, modified for cyber0day"
