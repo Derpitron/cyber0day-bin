@@ -5,7 +5,7 @@ pkgrel=0
 pkgdesc="Core StratOS scripts, modified for cyber0day"
 arch=('any')
 license=('GPL3')
-depends=('bash' 'python' 'dialog')
+depends=('bash' 'python' 'dialog', 'cyber0day-wallpapers', 'firefox')
 optdepends=(
 	'flatpak: Universal package manager'
  	'yay: package manager'
