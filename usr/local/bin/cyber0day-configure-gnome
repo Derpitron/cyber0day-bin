@@ -27,7 +27,7 @@ sudo ln -sf /etc/skel/.config/gtk-4.0/ ~/.config/
 gsettings set org.gnome.desktop.interface cursor-theme "Bibata-Modern-Ice"
 ##########################################################################################
 
-# bash /usr/local/bin/StratOS-configure-theme
+
 gsettings set org.gnome.desktop.background picture-uri='file:///usr/share/backgrounds/cyber0day/4.0/techne.png'
 gsettings set org.gnome.desktop.background picture-uri-light='file:///usr/share/backgrounds/cyber0day/4.0/techne.png'
 gsettings set org.gnome.desktop.background picture-uri-dark='file:///usr/share/backgrounds/cyber0day/4.0/intermatrix.png'
